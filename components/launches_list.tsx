@@ -1,5 +1,6 @@
 import React from 'react';
 import {useQuery, gql} from '@apollo/client';
+import InfiniteScroll from "react-infinite-scroll-component";
 
 interface Launch {
     id: number;
@@ -54,16 +55,23 @@ export function PastLaunchesList() {
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
-    return (
-        <div>
-            {data && data.launchesPast.map(launch =>
-                <div key={launch.id}>
-                    <h4>{launch.mission_name}</h4>
-                    <p>{launch.launch_date_utc}</p>
-                    <hr/>
-                </div>
-            )}
-            <button onClick={() => { loadMore() }}>Load More</button>
-        </div>
-    );
+    if (data)
+        return (
+            <InfiniteScroll
+                dataLength={data.launchesPast.length * 10}
+                next={() => loadMore()}
+                hasMore={data.launchesPast.length % 10 === 0} // @todo: find a better way to tell if it's an end
+                loader={<p>Loading...</p>}
+                endMessage={<p>You&apos;ve seen it all. How cool is that!</p>}
+            >
+                {data.launchesPast.map(launch =>
+                    <div key={launch.id}>
+                        <h4>{launch.mission_name} [{launch.rocket.rocket_name}]</h4>
+                        <p>{launch.launch_site.site_name_long}</p>
+                        <p>{launch.launch_date_utc}</p>
+                        <hr/>
+                    </div>
+                )}
+            </InfiniteScroll>
+        );
 }
