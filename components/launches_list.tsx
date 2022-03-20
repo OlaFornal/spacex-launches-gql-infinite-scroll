@@ -2,7 +2,7 @@ import React from 'react';
 import {useQuery, gql} from '@apollo/client';
 import InfiniteScroll from "react-infinite-scroll-component";
 
-interface Launch {
+interface LaunchData {
     id: number;
     launch_site: {
         site_name_long: string
@@ -15,7 +15,7 @@ interface Launch {
 }
 
 interface LaunchesList {
-    launchesPast: Launch[];
+    launchesPast: LaunchData[];
 }
 
 interface LaunchesListVars {
@@ -39,7 +39,7 @@ const GET_LAUNCHES_PAST = gql`
   }
 `;
 
-export function PastLaunchesList() {
+export const PastLaunchesList: React.FC = () => {
     const {loading, error, data, fetchMore} = useQuery<LaunchesList, LaunchesListVars>(
         GET_LAUNCHES_PAST,
         {variables: {limit: 10, offset: 0}}
@@ -74,4 +74,7 @@ export function PastLaunchesList() {
                 )}
             </InfiniteScroll>
         );
+    return (
+        <p>You&apos;ve seen it all. How cool is that!</p>
+    )
 }
