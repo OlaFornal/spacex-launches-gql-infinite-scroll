@@ -1,6 +1,10 @@
 This is a next app using [SpaceX graphQL API](https://api.spacex.land/graphql/) (apollo client)
 Task: implement infinite scroll of past SpaceX launches.
 
+## Live demo
+
+[Live demo on Vercel](https://spacex-inf.vercel.app/)
+
 ## Getting Started
 
 First, run the development server:
