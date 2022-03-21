@@ -1,19 +1,16 @@
-import type { GetServerSideProps, NextPage } from 'next'
-import Head from 'next/head'
+import type { GetServerSideProps, NextPage } from 'next';
+import Head from 'next/head';
 import styles from '../../styles/Home.module.css'
-import { Footer } from "../../components/footer";
 import { getApolloClient } from "../../dataProvider/client";
-import { gql } from "@apollo/client";
-import { Header } from '../../components/header';
+import { Header } from '../../components/Header';
 import Link from "next/link";
-
-interface LaunchDetails {
-    details: string,
-    mission_name: string
-}
+import { GET_LAUNCH_DETAILS } from "../../dataProvider/launchesQueries";
+import { ParsedUrlQuery } from "querystring";
+import { LaunchDetails, LaunchDetailsInterface } from "../../components/LaunchDetails";
+import {Footer} from "../../components/Footer";
 
 interface LaunchProps {
-    launchData: LaunchDetails
+    launchData: LaunchDetailsInterface
 }
 
 const Launch: NextPage<LaunchProps> = ({ launchData }) => {
@@ -24,33 +21,23 @@ const Launch: NextPage<LaunchProps> = ({ launchData }) => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <Header />
-            {launchData ?
-                <main className={styles.main}>
-                    <h1 className={styles.title}>
-                        {launchData.mission_name}
-                    </h1>
-                    <p>{launchData.details}</p>
-                </main> :
-                <h1>Not found</h1>}
-            <Link href="/">
-                <a>Back to homepage</a>
-            </Link>
+            <main className={styles.main}>
+                <LaunchDetails launch={launchData} />
+                <Link href="/">
+                    <a>Back to homepage</a>
+                </Link>
+            </main>
             <Footer />
         </div>
     )
 }
 
-const GET_LAUNCH_DETAILS = gql`
-  query GetLaunchDetails($id: ID!) {
-    launch(id: $id) {
-      details
-      mission_name
-    }
-  }
-`;
+interface SsrParams extends ParsedUrlQuery {
+    id: string;
+}
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-    const id = context.params && context.params.id ? context.params.id.toString() : '1';
+export const getServerSideProps: GetServerSideProps<LaunchProps, SsrParams> = async ( context) => {
+    const { id } = context.params!;
     const client = getApolloClient(true);
     const launchResponse = await client.query({ query: GET_LAUNCH_DETAILS, variables: { id: id } });
 

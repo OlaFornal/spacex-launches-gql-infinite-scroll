@@ -1,8 +1,9 @@
 import type {NextPage} from 'next'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-import {PastLaunchesList} from "../components/launches_list";
-import {Footer} from "../components/footer";
+import { PastLaunchesList } from "../components/LaunchesList";
+import { Footer } from "../components/Footer";
+
 
 const Home: NextPage = () => {
     return (
@@ -15,7 +16,8 @@ const Home: NextPage = () => {
                 <h1 className={styles.title}>
                     SpaceX Launches
                 </h1>
-                <p>With infinite scroll</p>
+                <p>(infinite scroll demo)</p>
+
                 <PastLaunchesList/>
             </main>
             <Footer />

@@ -1,7 +1,8 @@
 import React from 'react';
-import {useQuery, gql} from '@apollo/client';
+import {useQuery} from '@apollo/client';
 import InfiniteScroll from "react-infinite-scroll-component";
 import Link from 'next/link'
+import {GET_LAUNCHES_PAST} from "../dataProvider/launchesQueries";
 
 interface LaunchData {
     id: number;
@@ -24,22 +25,6 @@ interface LaunchesListVars {
     offset: number;
 }
 
-const GET_LAUNCHES_PAST = gql`
-  query GetLaunchesPast($limit: Int, $offset: Int) {
-    launchesPast(limit: $limit, offset: $offset) {
-      id
-      launch_site {
-        site_name_long
-      }
-      launch_date_utc
-      mission_name
-      rocket {
-        rocket_name
-      }
-    }
-  }
-`;
-
 export const PastLaunchesList: React.FC = () => {
     const {loading, error, data, fetchMore} = useQuery<LaunchesList, LaunchesListVars>(
         GET_LAUNCHES_PAST,
@@ -56,7 +41,7 @@ export const PastLaunchesList: React.FC = () => {
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
-    if (data)
+    if (data && data.launchesPast.length > 0)
         return (
             <InfiniteScroll
                 dataLength={data.launchesPast.length * 10}
@@ -66,16 +51,16 @@ export const PastLaunchesList: React.FC = () => {
                 endMessage={<p>You&apos;ve seen it all. How cool is that!</p>}
             >
                 {data.launchesPast.map(launch =>
-                    <Link href={`/launch/${launch.id}`} key={launch.id}>
-                        <a>
-                            <div>
-                                <h4>{launch.mission_name} [{launch.rocket.rocket_name}]</h4>
-                                <p>{launch.launch_site.site_name_long}</p>
-                                <p>{launch.launch_date_utc}</p>
-                                <hr/>
-                            </div>
-                        </a>
-                    </Link>
+                    <div key={launch.id}>
+                        <h4>
+                        <Link href={`/launch/${launch.id}`}>
+                            <a>{launch.mission_name} [{launch.rocket.rocket_name}]</a>
+                        </Link>
+                        </h4>
+                        <p>{launch.launch_site.site_name_long}</p>
+                        <p>{launch.launch_date_utc}</p>
+                        <hr/>
+                    </div>
                 )}
             </InfiniteScroll>
         );
