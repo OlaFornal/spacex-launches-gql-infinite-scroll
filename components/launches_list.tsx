@@ -1,6 +1,7 @@
 import React from 'react';
 import {useQuery, gql} from '@apollo/client';
 import InfiniteScroll from "react-infinite-scroll-component";
+import Link from 'next/link'
 
 interface LaunchData {
     id: number;
@@ -65,12 +66,16 @@ export const PastLaunchesList: React.FC = () => {
                 endMessage={<p>You&apos;ve seen it all. How cool is that!</p>}
             >
                 {data.launchesPast.map(launch =>
-                    <div key={launch.id}>
-                        <h4>{launch.mission_name} [{launch.rocket.rocket_name}]</h4>
-                        <p>{launch.launch_site.site_name_long}</p>
-                        <p>{launch.launch_date_utc}</p>
-                        <hr/>
-                    </div>
+                    <Link href={`/launch/${launch.id}`} key={launch.id}>
+                        <a>
+                            <div>
+                                <h4>{launch.mission_name} [{launch.rocket.rocket_name}]</h4>
+                                <p>{launch.launch_site.site_name_long}</p>
+                                <p>{launch.launch_date_utc}</p>
+                                <hr/>
+                            </div>
+                        </a>
+                    </Link>
                 )}
             </InfiniteScroll>
         );

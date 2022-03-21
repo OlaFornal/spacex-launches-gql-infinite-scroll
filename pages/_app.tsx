@@ -1,30 +1,12 @@
 import '../styles/globals.css'
 import type {AppProps} from 'next/app'
-import {
-    ApolloClient,
-    InMemoryCache,
-    ApolloProvider
-} from "@apollo/client";
-import { offsetLimitPagination } from "@apollo/client/utilities";
+import {ApolloProvider} from "@apollo/client";
+import {getApolloClient} from "../dataProvider/client";
 
-const cache = new InMemoryCache({
-    typePolicies: {
-        Query: {
-            fields: {
-                launchesPast: offsetLimitPagination(),
-            },
-        },
-    },
-});
-
-const client = new ApolloClient({
-    uri: 'https://api.spacex.land/graphql/',
-    cache: cache
-});
 
 function MyApp({Component, pageProps}: AppProps) {
     return (
-        <ApolloProvider client={client}>
+        <ApolloProvider client={getApolloClient()}>
             <Component {...pageProps} />
         </ApolloProvider>
     )
