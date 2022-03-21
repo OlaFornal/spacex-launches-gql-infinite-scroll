@@ -1,9 +1,11 @@
-import type {GetServerSideProps, NextPage} from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../../styles/Home.module.css'
-import {Footer} from "../../components/footer";
-import {getApolloClient} from "../../dataProvider/client";
-import {gql} from "@apollo/client";
+import { Footer } from "../../components/footer";
+import { getApolloClient } from "../../dataProvider/client";
+import { gql } from "@apollo/client";
+import { Header } from '../../components/header';
+import Link from "next/link";
 
 interface LaunchDetails {
     details: string,
@@ -14,14 +16,14 @@ interface LaunchProps {
     launchData: LaunchDetails
 }
 
-const Launch: NextPage<LaunchProps> = ({launchData}) => {
+const Launch: NextPage<LaunchProps> = ({ launchData }) => {
     return (
         <div className={styles.container}>
             <Head>
                 <title>SpaceX launches - {launchData ? launchData.mission_name : 'Not Found :('}</title>
-                <link rel="icon" href="/favicon.ico"/>
+                <link rel="icon" href="/favicon.ico" />
             </Head>
-
+            <Header />
             {launchData ?
                 <main className={styles.main}>
                     <h1 className={styles.title}>
@@ -30,8 +32,10 @@ const Launch: NextPage<LaunchProps> = ({launchData}) => {
                     <p>{launchData.details}</p>
                 </main> :
                 <h1>Not found</h1>}
-
-            <Footer/>
+            <Link href="/">
+                <a>Back to homepage</a>
+            </Link>
+            <Footer />
         </div>
     )
 }
@@ -48,7 +52,7 @@ const GET_LAUNCH_DETAILS = gql`
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const id = context.params && context.params.id ? context.params.id.toString() : '1';
     const client = getApolloClient(true);
-    const launchResponse = await client.query({query: GET_LAUNCH_DETAILS, variables: {id: id}});
+    const launchResponse = await client.query({ query: GET_LAUNCH_DETAILS, variables: { id: id } });
 
     return {
         props: {

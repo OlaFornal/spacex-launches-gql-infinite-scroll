@@ -3,7 +3,7 @@
 }
 
 .main {
-  min-height: 100vh;
+  min-height: 75vh;
   padding: 4rem 0;
   flex: 1;
   display: flex;
@@ -13,6 +13,7 @@
 }
 
 .footer {
+  min-height: 15vh;
   display: flex;
   flex: 1;
   padding: 2rem 0;
@@ -106,6 +107,13 @@
 .logo {
   height: 1em;
   margin-left: 0.5rem;
+}
+
+.button {
+  max-height: 15vh;
+  margin: 20px; 
+  padding: 10px; 
+  font-size: 16px;
 }
 
 @media (max-width: 600px) {
